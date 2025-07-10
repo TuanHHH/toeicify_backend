@@ -1,0 +1,14 @@
+{
+  "name": "Spring Boot with PostgreSQL",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
+  "forwardPorts": [8080, 5432],
+  "postCreateCommand": "./.devcontainer/init.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}
