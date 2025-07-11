@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface ExamMapper {
+
     @Mapping(source = "exam.examCategory.categoryId", target = "categoryId")
     @Mapping(source = "exam.examCategory.categoryName", target = "categoryName")
     @Mapping(source = "exam.createdBy.userId", target = "createdById")

@@ -65,6 +65,10 @@ spring:
     password: ${MAIL_PASSWORD}
   main:
     banner-mode: off
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 jwt:
   secret-key: ${JWT_SECRET_KEY}
 server:
@@ -79,3 +83,11 @@ springdoc:
 
 app:
   client: ${APP_CLIENT}
+
+cloud:
+  endpoint: ${S3_ENDPOINT}
+  accessKey: ${S3_ACCESS_KEY}
+  secretKey: ${S3_SECRET_KEY}
+  bucket: ${S3_BUCKET}
+  public-url: ${S3_PUBLIC_URL}
+
