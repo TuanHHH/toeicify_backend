@@ -28,8 +28,6 @@ public class SecurityConfig {
             "/api/auth/register",
             "/api/auth/register/**",
             "/api/auth/forgot-password",
-            "api/exam-categories",
-            "api/exam-categories/**",
             "/api/auth/verify-otp",
             "/api/auth/reset-password",
             "/v3/api-docs/**",
@@ -45,21 +43,29 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(whiteList).permitAll()
-                        .requestMatchers(HttpMethod.POST, "api/exam-categories").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "api/exam-categories/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "api/exam-categories/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/exams", "/api/exams/**", "/api/exams/search").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/exams/search").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/exams").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/exams/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/exam-categories", "/api/exam-categories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/exam-categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/exam-categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/exam-categories/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .oauth2Login(oauth -> oauth
-                        .successHandler(oAuth2LoginSuccessHandler)
-                        .failureHandler((request, response, exception) -> {
+                                .successHandler(oAuth2LoginSuccessHandler)
+                                .failureHandler((request, response, exception) -> {
 //                            System.err.println("OAuth2 Login Error: " + exception.getMessage());
 //                            System.err.println("Request URI: " + request.getRequestURI());
 //                            System.err.println("Query String: " + request.getQueryString());
-                           response.sendRedirect(client + "/authentication/error?isLogin=false");
-                        })
+                                    response.sendRedirect(client + "/authentication/error?isLogin=false");
+                                })
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()).authenticationEntryPoint(customAuthenticationEntryPoint));
         return http.build();

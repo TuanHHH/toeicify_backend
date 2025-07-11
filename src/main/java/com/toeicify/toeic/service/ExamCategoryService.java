@@ -15,4 +15,6 @@ public interface ExamCategoryService {
     void deleteExamCategory(Long id);
     PaginationResponse getAllExamCategories(int page, int pageSize);
     ExamCategoryResponse getExamCategoryById(Long id);
+
+    ExamCategory findExamCategoryById(Long id);
 }

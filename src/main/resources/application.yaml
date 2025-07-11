@@ -1,4 +1,6 @@
 spring:
+  cache:
+    type: redis
   application:
     name: toeic-api
   datasource:
@@ -31,13 +33,25 @@ spring:
     show-sql: true
     properties:
       hibernate:
+#        id:
+#          new_generator_mappings: true
+#        jdbc:
+#          batch_size: 60
+#          order_inserts: true
+#          order_updates: true
         format_sql: true
   data:
+    web:
+      pageable:
+        one-indexed-parameters: true
     redis:
       host: ${REDIS_HOST}
       username: ${REDIS_USERNAME}
       port: ${REDIS_PORT}
       password: ${REDIS_PASSWORD}
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
   mail:
     username: ${MAIL_USERNAME}
     port: ${MAIL_PORT}
@@ -49,6 +63,8 @@ spring:
           auth: "true"
     host: ${MAIL_HOST}
     password: ${MAIL_PASSWORD}
+  main:
+    banner-mode: off
 jwt:
   secret-key: ${JWT_SECRET_KEY}
 server:

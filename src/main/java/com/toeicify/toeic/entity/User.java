@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -49,5 +50,13 @@ public class User {
 
     @Column(name = "social_media_provider", length = 100)
     private String socialMediaProvider;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Blog> blogs;
+
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.registrationDate = Instant.now();
+    }
 }
 

@@ -20,9 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -50,7 +47,6 @@ public class UserServiceImpl implements UserService {
                 .email(request.email())
                 .passwordHash(request.password()) // password is encrypted password from previous step
                 .role(roleRepository.findById("GUEST").orElseThrow(() -> new ResourceNotFoundException("Default role not found")))
-                .registrationDate(Instant.now())
                 .build();
         return userRepository.save(newUser);
     }

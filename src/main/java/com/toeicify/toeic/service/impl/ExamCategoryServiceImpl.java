@@ -9,14 +9,11 @@ import com.toeicify.toeic.exception.ResourceNotFoundException;
 import com.toeicify.toeic.mapper.ExamCategoryMapper;
 import com.toeicify.toeic.repository.ExamCategoryRepository;
 import com.toeicify.toeic.service.ExamCategoryService;
-import com.toeicify.toeic.util.annotation.ApiMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by hungpham on 7/10/2025
@@ -26,10 +23,11 @@ import java.util.List;
 public class ExamCategoryServiceImpl implements ExamCategoryService {
     private final ExamCategoryRepository examCategoryRepository;
     private final ExamCategoryMapper examCategoryMapper;
+
     @Override
 
     public ExamCategoryResponse createExamCategory(ExamCategoryRequest examCategory) {
-        if (examCategoryExists(examCategory.categoryName())){
+        if (examCategoryRepository.existsByCategoryName(examCategory.categoryName())) {
             throw new ResourceAlreadyExistsException("Category already exists");
         }
         ExamCategory examCategoryEntity = examCategoryMapper.toExamCategory(examCategory);
@@ -39,7 +37,7 @@ public class ExamCategoryServiceImpl implements ExamCategoryService {
     @Override
     public ExamCategoryResponse updateExamCategory(Long id, ExamCategoryRequest examCategory) {
         ExamCategory category = findExamCategoryById(id);
-        if (!isCategoryNameUnique(id, examCategory.categoryName())){
+        if (examCategoryRepository.existsByCategoryNameAndCategoryIdNot(examCategory.categoryName(), id)) {
             throw new ResourceAlreadyExistsException("Category name must be unique");
         }
         category.setCategoryName(examCategory.categoryName());
@@ -65,15 +63,8 @@ public class ExamCategoryServiceImpl implements ExamCategoryService {
         return examCategoryMapper.toResponse(findExamCategoryById(id));
     }
 
-    private ExamCategory findExamCategoryById(Long id) {
+    @Override
+    public ExamCategory findExamCategoryById(Long id) {
         return examCategoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Exam category not found"));
-    }
-
-    private boolean examCategoryExists(String categoryName) {
-        return examCategoryRepository.existsByCategoryName(categoryName);
-    }
-
-    private boolean isCategoryNameUnique(Long id, String name) {
-        return !examCategoryRepository.existsByCategoryNameAndCategoryIdNot(name, id);
     }
 }

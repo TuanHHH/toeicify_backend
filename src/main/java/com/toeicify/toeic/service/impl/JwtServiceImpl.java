@@ -35,7 +35,7 @@ public class JwtServiceImpl implements JwtService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS)) // 1 hour
+                .expiresAt(now.plus(240, ChronoUnit.HOURS)) // 1 hour
                 .subject(String.valueOf(userDetails.getUser().getUserId()))
                 .id(UUID.randomUUID().toString()) // jti
                 .claim("userId", userDetails.getUser().getUserId())

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Created by hungpham on 7/10/2025
@@ -22,7 +23,7 @@ public class Exam {
     @Column(name = "exam_id")
     private Long examId;
 
-    @Column(name = "exam_name", nullable = false)
+    @Column(name = "exam_name", unique = true,nullable = false)
     private String examName;
 
     @Column(name = "exam_description", nullable = false)
@@ -38,6 +39,9 @@ public class Exam {
     @Enumerated(EnumType.STRING)
     private ExamStatus status = ExamStatus.PENDING;
 
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExamPart> examParts;
+
     @Column(name = "created_at")
     private Instant createdAt;
 
@@ -48,4 +52,9 @@ public class Exam {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private ExamCategory examCategory;
+
+    @PrePersist
+    public void handleBeforeCreate() {
+        this.createdAt = Instant.now();
+    }
 }
